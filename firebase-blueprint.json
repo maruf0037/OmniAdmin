@@ -1,0 +1,139 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and permissions",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "Module": {
+      "title": "Module",
+      "description": "Configuration for a custom management module",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "id": { "type": "string" },
+        "icon": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "label": { "type": "string" },
+              "type": { "type": "string", "enum": ["text", "number", "boolean", "date"] }
+            },
+            "required": ["name", "label", "type"]
+          }
+        },
+        "description": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "id", "fields", "createdBy", "createdAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A work item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["todo", "in-progress", "done"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["title", "ownerId", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A grouping of multiple modules",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "moduleIds": { "type": "array", "items": { "type": "string" } },
+        "ownerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "ownerId", "createdAt", "moduleIds"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Supplier information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "mobile": { "type": "string" },
+        "shopName": { "type": "string" },
+        "nic": { "type": "string" },
+        "transactionType": { "type": "string", "enum": ["Bank", "Bkash", "Alternative"] },
+        "bankInfo": { "type": "object" },
+        "mobileWalletInfo": { "type": "object" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "ownerId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "mobile", "nic", "transactionType", "ownerId"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Inventory products",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "supplierId": { "type": "string" },
+        "barcode": { "type": "string" },
+        "stock": { "type": "integer" },
+        "cpu": { "type": "number" },
+        "mrp": { "type": "number" },
+        "variants": { "type": "array" },
+        "ownerId": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/modules/{moduleId}": {
+      "schema": "Module",
+      "description": "Custom module definitions"
+    },
+    "/modules/{moduleId}/items/{itemId}": {
+      "schema": "object",
+      "description": "Dynamic items within a custom module"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Default tasks collection"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Projects grouping multiple modules"
+    },
+    "/suppliers/{supplierId}": {
+      "schema": "Supplier",
+      "description": "Inventory suppliers"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Inventory products"
+    }
+  }
+}
